@@ -1,9 +1,11 @@
 
 var sys = require("sys"),
-    events = require("events");
+    events = require("events"),
+    http = require("http");
 
-
-var out = function(s){sys.puts(s);};
+var l = function(s){
+    sys.puts(s);
+};
 
 
 
@@ -15,22 +17,32 @@ function Dog(barkDb, name){
 Dog.prototype = new events.EventEmitter();
 
 Dog.prototype.barkAt = function(dog){
-    out(this.name + " barks at " + dog.name +  ", decibell:" + this.barkDb);
+    sys.puts(this.name + " barks at " + dog.name +  ", decibell:" + this.barkDb);
     this.emit("barkAt", dog);
 };
 
 Dog.prototype.barkBack = function(dog){
-    out(this.name + " barks back at " + dog.name + ", decibell:" + this.barkDb);
-    this.emit("barkBack");
+    sys.puts(this.name + " barks back at " + dog.name + ", decibell:" + this.barkDb);
+    this.emit("barkBack", dog);
 };
 
 Dog.prototype.on("barkAt", function(dog){
     dog.barkBack(this);
 });
 
-var fido = new Dog(12, "fido");
-var solo = new Dog(13, "solo");
+Dog.prototype.on("barkBack", function(dog){
+    sys.puts((this.barkDb > dog.barkDb ? this.name : dog.name) + " wins!");
+});
+
+var fido = new Dog(99, "fido");
+var solo = new Dog(98, "solo");
 
 
 solo.barkAt(fido);
+
+
+
+
+
+
 
