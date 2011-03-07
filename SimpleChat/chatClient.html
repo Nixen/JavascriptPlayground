@@ -7,7 +7,7 @@
                 var wSocket = new WebSocket("ws://javascriptplayground.andtan.cloud9ide.com");
             
                 wSocket.onmessage = function(data){
-                    $("#log").append(data.data);
+                    $("#log").append(data.data + "<br/>");
                 };
                 
                 $("#send").click(function(){
@@ -20,6 +20,7 @@
                         var data = $("#chatBox").val();
                         wSocket.send(data);
                         $(this).val("");
+                        $(this).blur();
                     }
                 });
             

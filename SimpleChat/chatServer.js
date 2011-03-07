@@ -1,31 +1,33 @@
 var sys = require("sys"),
     events = require("events"),
     http = require("http"),
-    ws     = require("./vendor/ws"),
+    ws     = require("./vendor/node-websocket-server"),
     base64 = require('./vendor/base64'),
     arrays = require('./vendor/arrays');
 
+//handy shorthand for insepction objects
+var ins = function(what){
+   sys.puts(sys.inspect(what)); 
+};
 
-var clients = [];
+//Initlializing server
+var wsServer = ws.createServer(function(){
+    
+});
 
-var wserv = ws.createServer(function (websocket) {
-  clients.push(websocket);
+wsServer.on("request", function(req,res){
+    res.writeHead(200, {});
+    res.write("chat client");
+    res.end();
+});
 
-  websocket.addListener("connect", function (resource) {
-    // emitted after handshake
-    sys.debug("connect: " + resource);
-  }).addListener("close", function () {
-    // emitted when server or client closes connection
-    clients.remove(websocket);
-    sys.debug("close");
-  }).addListener("data", function(data){
-    clients.each(function(c){
-        c.write(data);
+wsServer.on("connection", function(con){
+    sys.puts("user has connected with conection id: " + con.id);
+    con.on("message", function(message){
+        wsServer.broadcast(message);
     });
-  });
-}).listen(process.env.C9_PORT);
+});
 
+wsServer.listen(process.env.C9_PORT);
 
-
-sys.puts(process.env.C9_PORT);
-sys.puts(sys.inspect(wserv));
+sys.puts(" websocket and http server is running on port:"+process.env.C9_PORT);

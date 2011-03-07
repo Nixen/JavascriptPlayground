@@ -30,6 +30,7 @@ function pack(num) {
 var sys  = require("sys"),
   net    = require("net"),
   crypto = require("crypto"),
+  http = require("http"),
   requiredHeaders = {
     'get': /^GET (\/[^\s]*)/,
     'upgrade': /^WebSocket$/,
@@ -57,20 +58,20 @@ var sys  = require("sys"),
   ].join("\r\n"),
   flashPolicy = '<cross-domain-policy><allow-access-from domain="*" to-ports="*" /></cross-domain-policy>';
 
-
 exports.createServer = function (websocketListener, options) {
   if (!options) options = {};
   if (!options.flashPolicy) options.flashPolicy = flashPolicy;
-
-  return net.createServer(function (socket) {
+  
+  return net.createServer(function (socket, req, res) {
+    
     socket.setTimeout(0);
     socket.setNoDelay(true);
     socket.setKeepAlive(true, 0);
-
+    
     var emitter = new process.EventEmitter(),
       handshaked = false,
       buffer = "";
-      
+    
     function handle(data) {
       buffer += data;
       

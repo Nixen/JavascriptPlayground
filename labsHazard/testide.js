@@ -7,30 +7,34 @@ var l = function(s){
     sys.puts(s);
 };
 
-
+http.createServer(function(req, res){
+    res.writeHead(200, {});
+    res.write("yaaay");
+    res.end();
+}).listen(process.env.C9_PORT);
 
 function Dog(barkDb, name){
     this.name = name;
     this.barkDb = barkDb;
 }
 
-Dog.prototype = new events.EventEmitter();
+Dog.prototype.emitter = new events.EventEmitter();
 
 Dog.prototype.barkAt = function(dog){
     sys.puts(this.name + " barks at " + dog.name +  ", decibell:" + this.barkDb);
-    this.emit("barkAt", dog);
+    this.emitter.emit("barkAt", dog);
 };
 
 Dog.prototype.barkBack = function(dog){
     sys.puts(this.name + " barks back at " + dog.name + ", decibell:" + this.barkDb);
-    this.emit("barkBack", dog);
+    this.emitter.emit("barkBack", dog);
 };
 
-Dog.prototype.on("barkAt", function(dog){
+Dog.prototype.emitter.on("barkAt", function(dog){
     dog.barkBack(this);
 });
 
-Dog.prototype.on("barkBack", function(dog){
+Dog.prototype.emitter.on("barkBack", function(dog){
     sys.puts((this.barkDb > dog.barkDb ? this.name : dog.name) + " wins!");
 });
 
