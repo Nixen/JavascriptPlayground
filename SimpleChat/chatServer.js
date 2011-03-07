@@ -1,13 +1,11 @@
 var sys = require("sys"),
     events = require("events"),
     http = require("http"),
-    ws     = require("./vendor/node-websocket-server"),
-    base64 = require('./vendor/base64'),
-    arrays = require('./vendor/arrays');
+    ws     = require("./vendor/node-websocket-server");
 
 //handy shorthand for insepction objects
-var ins = function(what){
-   sys.puts(sys.inspect(what)); 
+Object.prototype.inspect = function(){
+    sys.puts(sys.inspect(this));
 };
 
 //Initlializing server
